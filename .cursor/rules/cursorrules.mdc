@@ -1,0 +1,63 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+// React Native Expo .cursorrules
+
+// React Native Expo best practices
+
+const reactNativeExpoBestPractices = [
+  "Use functional components with hooks",
+  "Utilize Expo SDK features and APIs",
+  "Implement proper navigation using React Navigation",
+  "Use Expo's asset system for images and fonts",
+  "Implement proper error handling and crash reporting",
+  "Utilize Expo's push notification system",
+  "Leverage Tailwind CSS (via NativeWind) for consistent styling",
+  "Use `react-native-maps` and Expo Location for map-based functionality",
+  "Keep components small, reusable, and focused on one responsibility",
+  "Use SafeAreaView to handle device notches and safe areas",
+];
+
+// Folder structure
+
+const folderStructure = `
+app/
+  (api)/
+  (auth)/
+  (root)/
+assets/
+components/
+contstants/
+lib/
+scripts/
+store/
+`;
+
+// Additional instructions
+
+const additionalInstructions = `
+1. Use TypeScript for type safety
+2. Implement proper styling using StyleSheet
+3. Utilize Expo's vector icons
+4. Use Expo's secure store for sensitive data
+5. Implement proper offline support
+6. Follow React Native best practices for performance
+7. Use Expo's OTA updates for quick deployments
+8. Prefer using tsx over jsx 
+`;
+
+const generalReactNativeBestPractices = [
+  "Use a clear project structure separating screens, components, and assets",
+  "Follow consistent and descriptive naming conventions",
+  "Use constants and utility functions to avoid hardcoded values",
+  "Implement state management using Redux and Redux Toolkit",
+  "Keep styling clean and centralized using Tailwind classes",
+  "Separate navigation logic using a dedicated Navigation folder",
+  "Use Google Places API for location-based autocomplete",
+  "Use TypeScript where possible for better type safety (note: this repo uses JS, but conversion to TS is straightforward)",
+  "Structure code for scalability (e.g., modular screen/component organization)",
+];
+
+
