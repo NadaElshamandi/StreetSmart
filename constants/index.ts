@@ -4,10 +4,18 @@ import onboarding3 from "../assets/images/onboarding3.png";
 import BG from "../assets/images/BG.png";
 import check from "../assets/images/check.png";
 
+
 import user from "../assets/icons/user.png";
 import email from "../assets/icons/email.png";
 import lock from "../assets/icons/lock.png";
 import google from "../assets/icons/google.png";
+import home from "../assets/icons/home.png";
+import wishlist from "../assets/icons/wishlist.png";
+import notification from "../assets/icons/notification.png";
+import profile from "../assets/icons/profile.png";
+import search from "../assets/icons/search.png";
+
+
 
 export const images = {
     onboarding1,
@@ -22,6 +30,11 @@ export const icons = {
     email,
     lock,
     google,
+    home,
+    wishlist,
+    notification,
+    profile,
+    search,
 };
 
 export const onboarding = [

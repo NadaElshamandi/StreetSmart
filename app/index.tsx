@@ -3,28 +3,12 @@ import { Redirect, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const { isSignedIn } = useAuth();
-  const rootNavigationState = useRootNavigationState();
-  const [isNavigationReady, setIsNavigationReady] = useState(false);
+  // This component no longer handles redirects based on auth state.
+  // The root layout (_layout.tsx) now handles initial routing.
+  // This component can remain minimal or be removed if not needed.
+  // For now, we'll keep it as a simple entry point.
 
-  useEffect(() => {
-    // Check if the root navigation state is available and ready
-    if (rootNavigationState?.routes?.length > 0 && rootNavigationState?.index > -1) {
-      setIsNavigationReady(true);
-    }
-  }, [rootNavigationState]);
-
-  // Wait for navigation to be ready
-  if (!isNavigationReady) {
-    return null; // Or a loading indicator
-  }
-
-  // Once navigation is ready, perform the redirect based on auth status
-  if (isSignedIn) {
-    return <Redirect href="/(root)/(tabs)/home" />;
-  }
-
-  return <Redirect href="/(auth)/welcome" />;
+  return null;
 };
 
 export default Home;

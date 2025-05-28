@@ -1,8 +1,8 @@
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, Image, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { styled } from 'nativewind';
 import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSignIn } from '@clerk/clerk-expo';
 import { images, icons } from '../../constants';
 import InputField from '../../components/InputField';
@@ -29,7 +29,7 @@ const SignIn = () => {
         password: ''
     });
 
-    const onSignInPress = async () => {
+    const onSignInPress = useCallback(async () => {
         if (!isLoaded) return;
 
         try {
@@ -40,14 +40,16 @@ const SignIn = () => {
 
             if (signInAttempt.status === 'complete') {
                 await setActive({ session: signInAttempt.createdSessionId });
-                router.replace('/');
+                router.replace('/(root)/(tabs)/home');
             } else {
-                console.error(JSON.stringify(signInAttempt, null, 2));
+                console.log(JSON.stringify(signInAttempt, null, 2));
+                Alert.alert("Error", "Log in failed. Please try again.");
             }
-        } catch (err) {
-            console.error(JSON.stringify(err, null, 2));
+        } catch (err: any) {
+            console.log(JSON.stringify(err, null, 2));
+            Alert.alert("Error", err.errors[0].longMessage);
         }
-    };
+    }, [isLoaded, form]);
 
     return (
         <StyledScrollView className="flex-1 bg-white">
@@ -55,7 +57,7 @@ const SignIn = () => {
                 <StyledView className="relative w-full h-[250px]">
                     <StyledImage source={images.BG} className="z-0 w-full h-[250px]" />
                     <StyledText className="text-2xl text-black font-JakartaSemiBold absolute bottom-5 left-5">
-                       Welcome!
+                        Welcome 👋
                     </StyledText>
                 </StyledView>
                 <StyledView className="p-5">
@@ -86,7 +88,7 @@ const SignIn = () => {
                         href="/sign-up"
                         className="text-lg text-center text-general-200 mt-10"
                     >
-                        Don&apos;t Have an Account?{" "}
+                        Don&apos;t have an account?{" "}
                         <StyledText className="text-primary-500">Sign Up</StyledText>
                     </StyledLink>
                 </StyledView>

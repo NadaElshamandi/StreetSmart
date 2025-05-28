@@ -18,17 +18,9 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function SplashScreen(): React.JSX.Element {
-  const navigation = useNavigation<NavigationProp>();
-
-  useEffect(() => {
-    // Navigate to Welcome screen after 2 seconds
-    const timer = setTimeout(() => {
-      navigation.replace('Welcome');
-    }, 2000);
-
-    // Cleanup timer
-    return () => clearTimeout(timer);
-  }, [navigation]);
+  // Removed automatic navigation from here.
+  // The root layout (_layout.tsx) will handle the transition
+  // after assets and authentication state are loaded.
 
   return (
     <StyledView className="flex-1 bg-primary-100 items-center justify-center">

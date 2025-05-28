@@ -1,17 +1,18 @@
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";
-import { Stack, Slot, Redirect } from "expo-router";
+import { Stack, Slot, Redirect, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "react-native-reanimated";
 import { LogBox } from "react-native";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { tokenCache } from "../lib/auth";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHable_KEY!;
 
 LogBox.ignoreLogs(["Clerk:"]);
 
@@ -29,9 +30,6 @@ export default function RootLayout() {
     "Jakarta-SemiBold": require("../assets/fonts/PlusJakartaSans-SemiBold.ttf"),
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  // This prevents errors from cascading to the native apps and crashing.
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -43,29 +41,33 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      {/* Wrap the Stack with ClerkLoaded to ensure auth is ready */}
-      <ClerkLoaded>
-        <RootLayoutNav />
-      </ClerkLoaded>
-    </ClerkProvider>
+    <SafeAreaProvider>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <RootLayoutNav />
+        </ClerkLoaded>
+      </ClerkProvider>
+    </SafeAreaProvider>
   );
 }
 
 function RootLayoutNav() {
   const { isSignedIn } = useAuth();
+  const router = useRouter();
+  const hasRedirected = useRef(false);
 
-  // If the user is signed in, redirect to the authenticated part of the app
-  if (isSignedIn) {
-    return <Redirect href="/(root)" />;
-  }
+  useEffect(() => {
+    if (isSignedIn && !hasRedirected.current) {
+      hasRedirected.current = true;
+      router.replace("/(root)");
+    }
+  }, [isSignedIn]);
 
-  // If the user is not signed in, redirect to the authentication flow
+  if (isSignedIn) return null; // Prevent rendering while redirecting
+
   return (
     <Stack>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      {/* Optionally, you can have a default public screen here */}
-      {/* <Stack.Screen name="public" options={{ headerShown: false }} /> */}
     </Stack>
   );
-} 
+}
