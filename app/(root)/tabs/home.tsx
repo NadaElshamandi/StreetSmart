@@ -15,16 +15,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import GoogleTextInput from "@/components/GoogleTextInput";
 import Map from "@/components/Map";
+import LandmarkCard from "@/components/LandmarkCard";
 import { icons, images } from "@/constants";
+import { mockLandmarks } from "@/constants/mockData";
 import { useFetch } from "@/lib/fetch";
-import { useLocationStore } from "@/store";
-import { Ride } from "@/types/type";
+import { useLocationStore, useFavoritesStore } from "@/store";
+import { Landmark } from "@/types/type";
 
 const Home = () => {
   const { user } = useUser();
   const { signOut } = useAuth();
 
   const { setUserLocation, setDestinationLocation } = useLocationStore();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavoritesStore();
 
   const handleSignOut = async () => {
     try {
@@ -41,13 +44,13 @@ const Home = () => {
 
   // Temporarily disable API calls until backend is set up
   // const {
-  //   data: recentRides,
+  //   data: landmarks,
   //   loading,
   //   error,
-  // } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  // } = useFetch<Landmark[]>(`/(api)/landmarks`);
 
   // Mock data for development
-  const recentRides: Ride[] = [];
+  const landmarks: Landmark[] = mockLandmarks;
   const loading = false;
   const error = null;
 
@@ -80,37 +83,69 @@ const Home = () => {
     address: string;
   }) => {
     setDestinationLocation(location);
+    // Navigate to directions/map view instead of find-ride
+    router.push("/(root)/directions");
+  };
 
-    router.push("/(root)/find-ride");
+  const handleLandmarkPress = (landmark: Landmark) => {
+    // Set the landmark as destination and navigate to directions
+    setDestinationLocation({
+      latitude: landmark.latitude,
+      longitude: landmark.longitude,
+      address: landmark.address,
+    });
+    router.push("/(root)/directions");
+  };
+
+  const handleFavoritePress = (landmark: Landmark) => {
+    if (isFavorite(landmark.id)) {
+      removeFromFavorites(landmark.id);
+    } else {
+      addToFavorites(landmark);
+    }
   };
 
   return (
-    <SafeAreaView className="bg-general-500">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F6F8FA' }}>
       <FlatList
-        data={recentRides?.slice(0, 5)}
+        data={landmarks?.slice(0, 5)}
         renderItem={({ item }) => (
-          <View className="bg-white rounded-lg p-4 mb-3 mx-5">
-            <Text className="text-lg font-JakartaBold">{item.origin_address}</Text>
-            <Text className="text-sm text-gray-500">to {item.destination_address}</Text>
-            <Text className="text-sm text-gray-600 mt-1">
-              {new Date(item.created_at).toLocaleDateString()}
-            </Text>
-          </View>
+          <LandmarkCard
+            item={{ ...item, is_favorite: isFavorite(item.id) }}
+            onPress={handleLandmarkPress}
+            onFavoritePress={handleFavoritePress}
+          />
         )}
         keyExtractor={(item, index) => index.toString()}
-        className="px-5"
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           paddingBottom: 100,
         }}
         ListEmptyComponent={() => (
-          <View className="flex flex-col items-center justify-center">
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingTop: 40,
+          }}>
             {!loading ? (
               <>
-                <Text className="text-lg font-JakartaBold text-gray-400 mt-10">
-                  No recent rides found
+                <Text style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: '#9CA3AF',
+                  marginTop: 40,
+                }}>
+                  No landmarks found
                 </Text>
-                <Text className="text-sm text-gray-500">Start your first ride!</Text>
+                <Text style={{
+                  fontSize: 14,
+                  color: '#6B7280',
+                  marginTop: 8,
+                }}>
+                  Discover amazing places around you!
+                </Text>
               </>
             ) : (
               <ActivityIndicator size="small" color="#000" />
@@ -119,35 +154,90 @@ const Home = () => {
         )}
         ListHeaderComponent={
           <>
-            <View className="flex flex-row items-center justify-between my-5">
-              <Text className="text-2xl font-JakartaExtraBold">
+            {/* Header with Welcome and Sign Out */}
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginVertical: 20,
+              marginHorizontal: 20,
+            }}>
+              <Text style={{
+                fontSize: 24,
+                fontWeight: '800',
+                color: '#111827',
+              }}>
                 Welcome {user?.firstName}👋
               </Text>
               <TouchableOpacity
                 onPress={handleSignOut}
-                className="justify-center items-center w-10 h-10 rounded-full bg-white"
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: 'white',
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 2,
+                  elevation: 3,
+                }}
               >
-                <Text className="text-red-500 font-bold">X</Text>
+                <Text style={{
+                  color: '#EF4444',
+                  fontWeight: 'bold',
+                  fontSize: 16,
+                }}>X</Text>
               </TouchableOpacity>
             </View>
 
-            <GoogleTextInput
-              icon={icons.search}
-              containerStyle="bg-white shadow-md shadow-neutral-300"
-              handlePress={handleDestinationPress}
-            />
+            {/* Search Input */}
+            <View style={{ marginHorizontal: 20, marginBottom: 20 }}>
+              <GoogleTextInput
+                icon={icons.search}
+                handlePress={handleDestinationPress}
+              />
+            </View>
 
-            <>
-              <Text className="text-xl font-JakartaBold mt-5 mb-3">
+            {/* Current Location Section */}
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#111827',
+                marginTop: 20,
+                marginBottom: 12,
+              }}>
                 Your current location
               </Text>
-              <View className="flex flex-row items-center bg-transparent h-[300px]">
+              
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: 'transparent',
+                height: 300,
+                borderRadius: 12,
+                overflow: 'hidden',
+              }}>
                 <Map />
               </View>
-            </>
+            </View>
 
-            <Text className="text-xl font-JakartaBold mt-5 mb-3">
-              Recent Rides
+            {/* Popular Landmarks Section */}
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#111827',
+              marginTop: 20,
+              marginBottom: 12,
+              marginHorizontal: 20,
+            }}>
+              Popular destinations
             </Text>
           </>
         }

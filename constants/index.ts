@@ -14,6 +14,10 @@ import wishlist from "../assets/icons/wishlist.png";
 import notification from "../assets/icons/notification.png";
 import profile from "../assets/icons/profile.png";
 import search from "../assets/icons/search.png";
+import location from "../assets/icons/Location.png";
+import point from "../assets/icons/Point.png";
+import calendar from "../assets/icons/calendar.png";
+import information from "../assets/icons/information.png";
 
 
 
@@ -35,6 +39,10 @@ export const icons = {
     notification,
     profile,
     search,
+    location,
+    point,
+    calendar,
+    information,
 };
 
 export const onboarding = [
@@ -57,3 +65,6 @@ export const onboarding = [
         image: onboarding3,
     },
 ];
+
+// Export mock data
+export { mockLandmarks } from './mockData';

@@ -17,16 +17,43 @@ const GoogleTextInput = ({
   if (!googlePlacesApiKey) {
     return (
       <View
-        className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle} p-4`}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          zIndex: 50,
+          borderRadius: 12,
+          backgroundColor: 'white',
+          padding: 16,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
       >
-        <View className="justify-center items-center w-6 h-6 mr-3">
+        <View style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 24,
+          height: 24,
+          marginRight: 12,
+        }}>
           <Image
             source={icon ? icon : icons.search}
-            className="w-6 h-6"
+            style={{ width: 24, height: 24 }}
             resizeMode="contain"
           />
         </View>
-        <Text className="text-gray-500 flex-1">
+        <Text style={{
+          color: '#6B7280',
+          flex: 1,
+          fontSize: 16,
+        }}>
           Google Places API key not configured
         </Text>
       </View>
@@ -35,43 +62,93 @@ const GoogleTextInput = ({
 
   return (
     <View
-      className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle}`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        zIndex: 50,
+        borderRadius: 12,
+        backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
+      }}
     >
       <GooglePlacesAutocomplete
         fetchDetails={true}
-        placeholder="Search"
+        placeholder="Search destinations..."
         debounce={200}
         enablePoweredByContainer={false}
         suppressDefaultStyles={false}
         styles={{
+          container: {
+            flex: 1,
+          },
           textInputContainer: {
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 20,
-            marginHorizontal: 20,
-            position: "relative",
-            shadowColor: "#d4d4d4",
+            flexDirection: 'row',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: 12,
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            marginHorizontal: 0,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
           },
           textInput: {
-            backgroundColor: textInputBackgroundColor
-              ? textInputBackgroundColor
-              : "white",
+            backgroundColor: 'transparent',
             fontSize: 16,
-            fontWeight: "600",
-            marginTop: 5,
-            width: "100%",
-            borderRadius: 200,
+            fontWeight: '400',
+            color: '#111827',
+            flex: 1,
+            marginLeft: 8,
+            marginTop: 0,
+            marginBottom: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            borderRadius: 0,
           },
           listView: {
-            backgroundColor: textInputBackgroundColor
-              ? textInputBackgroundColor
-              : "white",
-            position: "relative",
-            top: 0,
-            width: "100%",
-            borderRadius: 10,
-            shadowColor: "#d4d4d4",
-            zIndex: 99,
+            backgroundColor: 'white',
+            position: 'absolute',
+            top: 60,
+            left: 0,
+            right: 0,
+            borderRadius: 8,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 3.84,
+            elevation: 5,
+            zIndex: 1000,
+          },
+          row: {
+            backgroundColor: 'white',
+            padding: 13,
+            height: 44,
+            flexDirection: 'row',
+          },
+          separator: {
+            height: 0.5,
+            backgroundColor: '#E5E7EB',
+          },
+          description: {
+            fontSize: 15,
+            color: '#374151',
+          },
+          loader: {
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            height: 20,
           },
         }}
         onPress={(data, details = null) => {
@@ -92,17 +169,28 @@ const GoogleTextInput = ({
           types: "geocode",
         }}
         renderLeftButton={() => (
-          <View className="justify-center items-center w-6 h-6">
+          <View style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 24,
+            height: 24,
+          }}>
             <Image
               source={icon ? icon : icons.search}
-              className="w-6 h-6"
+              style={{ 
+                width: 20, 
+                height: 20,
+                tintColor: '#6B7280',
+              }}
               resizeMode="contain"
             />
           </View>
         )}
         textInputProps={{
-          placeholderTextColor: "gray",
+          placeholderTextColor: "#9CA3AF",
           placeholder: initialLocation ?? "Where do you want to go?",
+          autoCapitalize: "none",
+          autoCorrect: false,
         }}
       />
     </View>

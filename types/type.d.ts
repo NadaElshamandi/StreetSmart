@@ -1,5 +1,37 @@
 import { TextInputProps, TouchableOpacityProps, TextStyle, ViewStyle, ImageStyle } from "react-native";
 
+// Tour Guide Types
+declare interface Landmark {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  latitude: number;
+  longitude: number;
+  address: string;
+  image_url?: string;
+  rating: number;
+  is_favorite: boolean;
+  created_at: string;
+  opening_hours?: string;
+  entrance_fee?: string;
+  website?: string;
+}
+
+declare interface LandmarkCardProps {
+  item: Landmark;
+  onPress: (landmark: Landmark) => void;
+  onFavoritePress: (landmark: Landmark) => void;
+}
+
+declare interface FavoritesStore {
+  favorites: Landmark[];
+  addToFavorites: (landmark: Landmark) => void;
+  removeFromFavorites: (landmarkId: number) => void;
+  isFavorite: (landmarkId: number) => boolean;
+}
+
+// Legacy types (keeping for compatibility)
 declare interface Driver {
   id: number;
   first_name: string;

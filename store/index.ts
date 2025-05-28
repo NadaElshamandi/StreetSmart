@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { DriverStore, LocationStore, MarkerData } from "@/types/type";
+import { DriverStore, LocationStore, MarkerData, FavoritesStore, Landmark } from "@/types/type";
 
 // Simple authentication store for managing auth state
 interface AuthStore {
@@ -74,4 +74,22 @@ export const useDriverStore = create<DriverStore>((set) => ({
     set(() => ({ selectedDriver: driverId })),
   setDrivers: (drivers: MarkerData[]) => set(() => ({ drivers })),
   clearSelectedDriver: () => set(() => ({ selectedDriver: null })),
+}));
+
+export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
+  favorites: [],
+  addToFavorites: (landmark: Landmark) => {
+    set((state) => ({
+      favorites: [...state.favorites, { ...landmark, is_favorite: true }],
+    }));
+  },
+  removeFromFavorites: (landmarkId: number) => {
+    set((state) => ({
+      favorites: state.favorites.filter((landmark) => landmark.id !== landmarkId),
+    }));
+  },
+  isFavorite: (landmarkId: number) => {
+    const { favorites } = get();
+    return favorites.some((landmark) => landmark.id === landmarkId);
+  },
 }));
