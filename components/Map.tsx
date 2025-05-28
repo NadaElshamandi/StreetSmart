@@ -1,28 +1,147 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { MapProps } from "@/types/type";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View, StyleSheet } from "react-native";
+import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 
-const Map = ({ 
-  destinationLatitude, 
-  destinationLongitude, 
-  onDriverTimesCalculated, 
-  onMapReady 
-}: MapProps) => {
+import { icons } from "@/constants";
+import { mockLandmarks } from "@/constants/mockData";
+import {
+  calculateRegion,
+  generateMarkersFromLandmarks,
+} from "@/lib/map";
+import { useLandmarkStore, useLocationStore } from "@/store";
+import { Landmark, LandmarkMarkerData } from "@/types/type";
+
+const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
+
+const Map = () => {
+  const {
+    userLongitude,
+    userLatitude,
+    destinationLatitude,
+    destinationLongitude,
+  } = useLocationStore();
+  const { selectedLandmark, setLandmarks } = useLandmarkStore();
+
+  // Using mock data for landmarks
+  const landmarks: Landmark[] = mockLandmarks;
+  const loading = false;
+  const error = null;
+
+  const [markers, setMarkers] = useState<LandmarkMarkerData[]>([]);
+
+  useEffect(() => {
+    if (Array.isArray(landmarks)) {
+      const newMarkers = generateMarkersFromLandmarks({
+        data: landmarks,
+      });
+
+      setMarkers(newMarkers);
+      setLandmarks(newMarkers);
+    }
+  }, [landmarks, setLandmarks]);
+
+  const region = calculateRegion({
+    userLatitude,
+    userLongitude,
+    destinationLatitude,
+    destinationLongitude,
+  });
+
+  // Debug logging
+  console.log("Map component rendering with:", {
+    userLatitude,
+    userLongitude,
+    region,
+    markersCount: markers.length,
+    loading,
+    error
+  });
+
+  // Only show loading if there's an actual loading state, not just missing user location
+  if (loading)
+    return (
+      <View className="flex justify-between items-center w-full">
+        <ActivityIndicator size="small" color="#000" />
+      </View>
+    );
+
+  if (error)
+    return (
+      <View className="flex justify-between items-center w-full">
+        <Text>Error: {error}</Text>
+      </View>
+    );
+
   return (
-    <View className="w-full h-full rounded-2xl bg-gray-200 flex justify-center items-center">
-      <Text className="text-gray-500 text-center">
-        Map functionality temporarily disabled
-      </Text>
-      <Text className="text-gray-400 text-sm text-center mt-2">
-        Configure react-native-maps to enable
-      </Text>
-      {destinationLatitude && destinationLongitude && (
-        <Text className="text-gray-400 text-xs text-center mt-2">
-          Destination: {destinationLatitude.toFixed(4)}, {destinationLongitude.toFixed(4)}
-        </Text>
-      )}
+    <View style={styles.container}>
+      <MapView
+        provider={PROVIDER_DEFAULT}
+        style={styles.map}
+        mapType="standard"
+        showsPointsOfInterest={false}
+        initialRegion={region}
+        showsUserLocation={true}
+        userInterfaceStyle="light"
+        onMapReady={() => console.log("Map is ready!")}
+        onRegionChange={(region) => console.log("Region changed:", region)}
+      >
+        {markers.map((marker, index) => (
+          <Marker
+            key={marker.id}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+            }}
+            title={marker.title}
+            description={marker.description}
+            pinColor={selectedLandmark === +marker.id ? "red" : "blue"}
+          />
+        ))}
+
+        {destinationLatitude && destinationLongitude && (
+          <>
+            <Marker
+              key="destination"
+              coordinate={{
+                latitude: destinationLatitude,
+                longitude: destinationLongitude,
+              }}
+              title="Destination"
+              pinColor="green"
+            />
+            {userLatitude && userLongitude && (
+              <MapViewDirections
+                origin={{
+                  latitude: userLatitude,
+                  longitude: userLongitude,
+                }}
+                destination={{
+                  latitude: destinationLatitude,
+                  longitude: destinationLongitude,
+                }}
+                apikey={directionsAPI!}
+                strokeColor="#0286FF"
+                strokeWidth={2}
+              />
+            )}
+          </>
+        )}
+      </MapView>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default Map;

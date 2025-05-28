@@ -7,7 +7,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   FlatList,
   ActivityIndicator,
 } from "react-native";
@@ -16,9 +15,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import GoogleTextInput from "@/components/GoogleTextInput";
 import Map from "@/components/Map";
 import LandmarkCard from "@/components/LandmarkCard";
-import { icons, images } from "@/constants";
+import { icons } from "@/constants";
 import { mockLandmarks } from "@/constants/mockData";
-import { useFetch } from "@/lib/fetch";
 import { useLocationStore, useFavoritesStore } from "@/store";
 import { Landmark } from "@/types/type";
 
@@ -52,7 +50,6 @@ const Home = () => {
   // Mock data for development
   const landmarks: Landmark[] = mockLandmarks;
   const loading = false;
-  const error = null;
 
   useEffect(() => {
     (async () => {
@@ -75,7 +72,7 @@ const Home = () => {
         address: `${address[0].name}, ${address[0].region}`,
       });
     })();
-  }, []);
+  }, [setUserLocation]);
 
   const handleDestinationPress = (location: {
     latitude: number;

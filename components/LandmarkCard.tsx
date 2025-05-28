@@ -1,7 +1,6 @@
 import { Image, Text, View, TouchableOpacity } from "react-native";
 
 import { icons } from "@/constants";
-import { formatDate } from "@/lib/utils";
 import { LandmarkCardProps } from "@/types/type";
 
 const LandmarkCard = ({ item, onPress, onFavoritePress }: LandmarkCardProps) => {

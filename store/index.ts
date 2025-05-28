@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { DriverStore, LocationStore, MarkerData, FavoritesStore, Landmark } from "@/types/type";
+import { LandmarkStore, LocationStore, LandmarkMarkerData, FavoritesStore, Landmark } from "@/types/type";
 
 // Simple authentication store for managing auth state
 interface AuthStore {
@@ -40,10 +40,6 @@ export const useLocationStore = create<LocationStore>((set) => ({
       userLongitude: longitude,
       userAddress: address,
     }));
-
-    // if driver is selected and now new location is set, clear the selected driver
-    const { selectedDriver, clearSelectedDriver } = useDriverStore.getState();
-    if (selectedDriver) clearSelectedDriver();
   },
 
   setDestinationLocation: ({
@@ -60,20 +56,16 @@ export const useLocationStore = create<LocationStore>((set) => ({
       destinationLongitude: longitude,
       destinationAddress: address,
     }));
-
-    // if driver is selected and now new location is set, clear the selected driver
-    const { selectedDriver, clearSelectedDriver } = useDriverStore.getState();
-    if (selectedDriver) clearSelectedDriver();
   },
 }));
 
-export const useDriverStore = create<DriverStore>((set) => ({
-  drivers: [] as MarkerData[],
-  selectedDriver: null,
-  setSelectedDriver: (driverId: number) =>
-    set(() => ({ selectedDriver: driverId })),
-  setDrivers: (drivers: MarkerData[]) => set(() => ({ drivers })),
-  clearSelectedDriver: () => set(() => ({ selectedDriver: null })),
+export const useLandmarkStore = create<LandmarkStore>((set) => ({
+  landmarks: [] as LandmarkMarkerData[],
+  selectedLandmark: null,
+  setSelectedLandmark: (landmarkId: number) =>
+    set(() => ({ selectedLandmark: landmarkId })),
+  setLandmarks: (landmarks: LandmarkMarkerData[]) => set(() => ({ landmarks })),
+  clearSelectedLandmark: () => set(() => ({ selectedLandmark: null })),
 }));
 
 export const useFavoritesStore = create<FavoritesStore>((set, get) => ({
