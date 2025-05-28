@@ -12,7 +12,7 @@ import { tokenCache } from "../lib/auth";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHable_KEY!;
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
 LogBox.ignoreLogs(["Clerk:"]);
 
@@ -61,7 +61,7 @@ function RootLayoutNav() {
       hasRedirected.current = true;
       router.replace("/(root)");
     }
-  }, [isSignedIn]);
+  }, [isSignedIn, router]);
 
   if (isSignedIn) return null; // Prevent rendering while redirecting
 
