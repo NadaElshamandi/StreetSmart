@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
