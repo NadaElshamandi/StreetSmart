@@ -1,4 +1,4 @@
-import { View, Image } from "react-native";
+import { View, Image, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import { icons } from "@/constants";
@@ -13,6 +13,26 @@ const GoogleTextInput = ({
   textInputBackgroundColor,
   handlePress,
 }: GoogleInputProps) => {
+  // If no API key is provided, show a simple text input placeholder
+  if (!googlePlacesApiKey) {
+    return (
+      <View
+        className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle} p-4`}
+      >
+        <View className="justify-center items-center w-6 h-6 mr-3">
+          <Image
+            source={icon ? icon : icons.search}
+            className="w-6 h-6"
+            resizeMode="contain"
+          />
+        </View>
+        <Text className="text-gray-500 flex-1">
+          Google Places API key not configured
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View
       className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle}`}
@@ -21,6 +41,8 @@ const GoogleTextInput = ({
         fetchDetails={true}
         placeholder="Search"
         debounce={200}
+        enablePoweredByContainer={false}
+        suppressDefaultStyles={false}
         styles={{
           textInputContainer: {
             alignItems: "center",
@@ -53,15 +75,21 @@ const GoogleTextInput = ({
           },
         }}
         onPress={(data, details = null) => {
-          handlePress({
-            latitude: details?.geometry.location.lat!,
-            longitude: details?.geometry.location.lng!,
-            address: data.description,
-          });
+          if (details?.geometry?.location) {
+            handlePress({
+              latitude: details.geometry.location.lat,
+              longitude: details.geometry.location.lng,
+              address: data.description,
+            });
+          }
+        }}
+        onFail={(error) => {
+          console.log("Google Places API Error:", error);
         }}
         query={{
           key: googlePlacesApiKey,
           language: "en",
+          types: "geocode",
         }}
         renderLeftButton={() => (
           <View className="justify-center items-center w-6 h-6">

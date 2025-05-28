@@ -1,14 +1,20 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Redirect, useRootNavigationState } from "expo-router";
-import { useEffect, useState } from "react";
+import { Redirect } from "expo-router";
 
 const Home = () => {
-  // This component no longer handles redirects based on auth state.
-  // The root layout (_layout.tsx) now handles initial routing.
-  // This component can remain minimal or be removed if not needed.
-  // For now, we'll keep it as a simple entry point.
+  const { isSignedIn, isLoaded } = useAuth();
 
-  return null;
+  // Wait for Clerk to load
+  if (!isLoaded) {
+    return null;
+  }
+
+  // Redirect based on authentication state
+  if (isSignedIn) {
+    return <Redirect href="/(root)/tabs/home" />;
+  } else {
+    return <Redirect href="/(auth)/welcome" />;
+  }
 };
 
 export default Home;

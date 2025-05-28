@@ -29,11 +29,11 @@ const TabIcon = ({
 export default function Layout() {
   return (
     <Tabs
-      initialRouteName="index"
+      initialRouteName="home"
       screenOptions={{
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "white",
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarStyle: {
           backgroundColor: "#333333",
           borderRadius: 50,
@@ -61,9 +61,9 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="rides"
+        name="wishlist"
         options={{
-          title: "Rides",
+          title: "wishlist",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon source={icons.wishlist} focused={focused} />
@@ -71,9 +71,9 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="notifications"
         options={{
-          title: "Chat",
+          title: "Notifications",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon source={icons.notification} focused={focused} />

@@ -59,5 +59,3 @@ const generalReactNativeBestPractices = [
   "Use TypeScript where possible for better type safety (note: this repo uses JS, but conversion to TS is straightforward)",
   "Structure code for scalability (e.g., modular screen/component organization)",
 ];
-
-

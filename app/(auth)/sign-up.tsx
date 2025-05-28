@@ -47,8 +47,6 @@ const SignUp = () => {
             await signUp.create({
                 emailAddress: form.email,
                 password: form.password,
-                firstName: form.name.split(' ')[0],
-                lastName: form.name.split(' ').slice(1).join(' '),
             });
 
             await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
@@ -70,20 +68,42 @@ const SignUp = () => {
                 code: verification.code,
             });
 
+            console.log('Verification status:', completeSignUp.status);
+
             if (completeSignUp.status === 'complete') {
-                await fetchAPI('/(api)/user', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        name: form.name,
-                        email: form.email,
-                        clerkId: completeSignUp.createdUserId,
-                    }),
-                });
                 await setActive({ session: completeSignUp.createdSessionId });
-                setVerification({
-                    ...verification,
-                    state: 'success'
-                });
+
+                // Temporarily disable user creation API call until backend is set up
+                try {
+                    await fetchAPI('/(api)/user', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            name: form.name,
+                            email: form.email,
+                            clerkId: completeSignUp.createdUserId,
+                        }),
+                    });
+                } catch (error) {
+                    console.log('User creation API not available:', error);
+                    // Continue with sign-up process even if user creation fails
+                }
+                
+                // Redirect to home page instead of showing success modal
+                router.replace('/(root)/tabs/home');
+            } else if (completeSignUp.status === 'missing_requirements') {
+                // For missing_requirements, try to complete without additional info
+                try {
+                    await setActive({ session: completeSignUp.createdSessionId });
+                    // Redirect to home page
+                    router.replace('/(root)/tabs/home');
+                } catch (sessionError) {
+                    console.error('Session error:', sessionError);
+                    setVerification({
+                        ...verification,
+                        error: 'Sign-up completed but session could not be activated. Please try signing in.',
+                        state: 'failed'
+                    });
+                }
             } else {
                 setVerification({
                     ...verification,
@@ -92,9 +112,10 @@ const SignUp = () => {
                 });
             }
         } catch (err: any) {
+            console.error('Verification error:', err);
             setVerification({
                 ...verification,
-                error: err.errors[0].longMessage,
+                error: err.errors?.[0]?.longMessage || 'Verification failed. Please try again.',
                 state: 'failed'
             });
         }

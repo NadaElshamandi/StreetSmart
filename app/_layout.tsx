@@ -1,8 +1,8 @@
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";
-import { Stack, Slot, Redirect, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import "react-native-reanimated";
 import { LogBox } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -52,22 +52,24 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
-  const hasRedirected = useRef(false);
 
   useEffect(() => {
-    if (isSignedIn && !hasRedirected.current) {
-      hasRedirected.current = true;
-      router.replace("/(root)");
+    if (isLoaded) {
+      if (isSignedIn) {
+        router.replace("/(root)/tabs/home");
+      } else {
+        router.replace("/(auth)/welcome");
+      }
     }
-  }, [isSignedIn, router]);
-
-  if (isSignedIn) return null; // Prevent rendering while redirecting
+  }, [isLoaded, isSignedIn]);
 
   return (
-    <Stack>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(root)" />
+      <Stack.Screen name="index" />
     </Stack>
   );
 }
