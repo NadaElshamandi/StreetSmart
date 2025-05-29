@@ -13,19 +13,45 @@ const GoogleTextInput = ({
   textInputBackgroundColor,
   handlePress,
 }: GoogleInputProps) => {
-  // Add validation for API key
+  // Enhanced API key validation
+  console.log("=== GOOGLE PLACES API DEBUG ===");
+  console.log("API Key exists:", !!googlePlacesApiKey);
+  console.log("API Key length:", googlePlacesApiKey?.length || 0);
+  console.log("API Key first 10 chars:", googlePlacesApiKey?.substring(0, 10) || "N/A");
+  
   if (!googlePlacesApiKey) {
-    console.warn("Google Places API key is not configured");
-  } else {
-    console.log("Google Places API key is configured");
-    // Test API connectivity
-    console.log("API Key length:", googlePlacesApiKey.length);
+    console.error("❌ Google Places API key is NOT configured!");
+    console.log("Please create a .env file in your project root with:");
+    console.log("EXPO_PUBLIC_GOOGLE_API_KEY=your_actual_api_key_here");
+    return (
+      <View style={{
+        height: 50,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 8,
+        backgroundColor: textInputBackgroundColor || '#f5f5f5',
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}>
+        <Image
+          source={icon ? icon : icons.search}
+          style={{
+            width: 20,
+            height: 20,
+            marginRight: 10,
+          }}
+          resizeMode="contain"
+        />
+        <Text style={{ color: '#999', fontSize: 16 }}>
+          Google API key not configured
+        </Text>
+      </View>
+    );
   }
 
   return (
-    <View
-      className={`flex flex-row items-center justify-center relative rounded-xl ${containerStyle}`}
-    >
+    <View style={{ flex: 1 }}>
       <GooglePlacesAutocomplete
         placeholder="Search"
         onPress={(data, details = null) => {
@@ -42,11 +68,9 @@ const GoogleTextInput = ({
             });
           } else {
             console.log("No details available, using place_id to fetch details");
-            // Fallback: if details are not available, we can still use the place data
-            // For now, let's just use the description and try to geocode it
             handlePress({
-              latitude: 0, // Placeholder - you might want to geocode this
-              longitude: 0, // Placeholder - you might want to geocode this
+              latitude: 0,
+              longitude: 0,
               address: data.description,
             });
           }
@@ -65,32 +89,34 @@ const GoogleTextInput = ({
           textInputContainer: {
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: textInputBackgroundColor || 'white',
-            borderRadius: 20,
+            height: 50,
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            backgroundColor: textInputBackgroundColor || '#f5f5f5',
             paddingHorizontal: 15,
-            shadowColor: '#d4d4d4',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
           },
           textInput: {
             backgroundColor: 'transparent',
-            height: 44,
-            borderRadius: 5,
-            paddingVertical: 5,
-            paddingHorizontal: 10,
-            fontSize: 15,
+            height: '100%',
+            borderRadius: 0,
+            paddingVertical: 0,
+            paddingHorizontal: 0,
+            fontSize: 16,
             flex: 1,
+            color: '#000',
+            marginLeft: 10,
           },
           listView: {
             backgroundColor: textInputBackgroundColor || 'white',
-            borderRadius: 10,
+            borderRadius: 8,
             marginTop: 5,
-            shadowColor: '#d4d4d4',
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 2,
@@ -100,7 +126,7 @@ const GoogleTextInput = ({
             elevation: 5,
             maxHeight: 150,
             position: 'absolute',
-            top: 50,
+            top: 55,
             left: 0,
             right: 0,
             zIndex: 1000,
@@ -127,16 +153,17 @@ const GoogleTextInput = ({
           },
         }}
         renderLeftButton={() => (
-          <View className="justify-center items-center w-6 h-6 mr-2">
-            <Image
-              source={icon ? icon : icons.search}
-              className="w-6 h-6"
-              resizeMode="contain"
-            />
-          </View>
+          <Image
+            source={icon ? icon : icons.search}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+            resizeMode="contain"
+          />
         )}
         textInputProps={{
-          placeholderTextColor: "gray",
+          placeholderTextColor: "#666",
           placeholder: initialLocation ?? "Where do you want to go?",
           autoCorrect: false,
           autoCapitalize: 'none',
@@ -151,13 +178,13 @@ const GoogleTextInput = ({
           </View>
         )}
         onFail={(error) => {
-          console.log("GooglePlacesAutocomplete error:", error);
+          console.error("❌ GooglePlacesAutocomplete error:", error);
         }}
         onNotFound={() => {
-          console.log("No results found");
+          console.log("⚠️ No results found");
         }}
         onTimeout={() => {
-          console.log("Request timeout");
+          console.error("⏰ Request timeout - check your internet connection");
         }}
         timeout={20000}
         keepResultsAfterBlur={false}
