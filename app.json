@@ -27,7 +27,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      ["expo-router", {"origin": "https://street-smart.app/"}
+      ],
       "expo-secure-store",
       "expo-web-browser"
     ]
