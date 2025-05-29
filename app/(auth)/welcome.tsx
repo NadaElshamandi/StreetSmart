@@ -20,7 +20,7 @@ const Onboarding = () => {
 
     const handleNext = () => {
         if (isLastSlide) {
-            router.replace("/(root)/(tabs)/home");
+            router.replace("/(root)/tabs/home");
         } else {
             swipeRef.current?.scrollBy(1);
         }
@@ -30,7 +30,7 @@ const Onboarding = () => {
         <StyledSafeAreaView className="flex h-full items-center justify-between bg-primary-100">
             <StyledTouchableOpacity
                 onPress={() => {
-                    router.replace("/(root)/(tabs)/home");
+                    router.replace("/(root)/tabs/home");
                 }}
                 className="w-full flex justify-end items-end p-5"  
             >
