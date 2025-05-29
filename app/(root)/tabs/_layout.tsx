@@ -44,10 +44,10 @@ export default function Layout() {
         tabBarStyle: {
           backgroundColor: "#1A1A1A",
           borderTopWidth: 0,
-          paddingTop: 20,
-          paddingBottom: 20,
-          paddingHorizontal: 38,
-          height: 95,
+          paddingTop: 12,
+          paddingBottom: 12,
+          paddingHorizontal: 20,
+          height: 70,
           width: "100%",
           position: "absolute",
           bottom: 0,
@@ -66,7 +66,7 @@ export default function Layout() {
         },
         tabBarItemStyle: {
           flex: 1,
-          marginHorizontal: 20,
+          marginHorizontal: 30,
         },
       }}
     >
@@ -108,6 +108,14 @@ export default function Layout() {
           tabBarIcon: ({ focused }) => (
             <TabIcon source={icons.profile} focused={focused} title="Profile" />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="Directions"
+        options={{
+          title: "Directions",
+          headerShown: false,
+          href: null,
         }}
       />
     </Tabs>

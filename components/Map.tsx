@@ -109,7 +109,7 @@ const Map = () => {
                 longitude: destinationLongitude,
               }}
               title="Destination"
-              pinColor="green"
+              pinColor="red"
             />
             {userLatitude && userLongitude && directionsAPI && (
               <MapViewDirections
