@@ -69,7 +69,7 @@ const DirectionsLayout = ({
         <Map />
       </View>
 
-      {/* Content Section with Transparency */}
+      
       <KeyboardAvoidingView 
         style={{
           flex: 1,
@@ -83,7 +83,7 @@ const DirectionsLayout = ({
           style={{
             backgroundColor: 'rgba(248, 248, 248, 0.85)', // Semi-transparent background
             margin: 20,
-            marginTop: 10,
+            marginTop: 30,
             padding: 20,
             borderRadius: 16,
             shadowColor: '#000',

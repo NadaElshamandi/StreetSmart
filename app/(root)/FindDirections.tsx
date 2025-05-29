@@ -62,7 +62,7 @@ const FindDirections = () => {
       <View style={{ marginTop: 20 }}>
         <CustomButton
           title="Start"
-          onPress={() => router.push(`/(root)/confirm-directions`)}
+          onPress={() => router.push(`/(root)/tabs/Directions`)}
           className="mt-5"
         />
       </View>

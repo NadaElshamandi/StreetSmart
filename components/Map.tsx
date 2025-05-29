@@ -114,8 +114,8 @@ const Map = () => {
             {userLatitude && userLongitude && directionsAPI && (
               <MapViewDirections
                 origin={{
-                  latitude: userLatitude,
-                  longitude: userLongitude,
+                  latitude: userLatitude!,
+                  longitude: userLongitude!,
                 }}
                 destination={{
                   latitude: destinationLatitude,
@@ -123,7 +123,7 @@ const Map = () => {
                 }}
                 apikey={directionsAPI}
                 strokeColor="#0286FF"
-                strokeWidth={2}
+                strokeWidth={3}
                 onError={(errorMessage) => {
                   // Only log non-zero-results errors to reduce noise
                   if (!errorMessage.includes('ZERO_RESULTS')) {
