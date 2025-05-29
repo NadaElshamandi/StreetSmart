@@ -81,7 +81,7 @@ const Home = () => {
   }) => {
     setDestinationLocation(location);
     // Navigate to directions/map view instead of find-ride
-    router.push("/(root)/directions");
+    router.push("/(root)/FindDirections");
   };
 
   const handleLandmarkPress = (landmark: Landmark) => {
@@ -91,7 +91,7 @@ const Home = () => {
       longitude: landmark.longitude,
       address: landmark.address,
     });
-    router.push("/(root)/directions");
+    router.push("/(root)/FindDirections");
   };
 
   const handleFavoritePress = (landmark: Landmark) => {

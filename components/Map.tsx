@@ -12,7 +12,7 @@ import {
 import { useLandmarkStore, useLocationStore } from "@/store";
 import { Landmark, LandmarkMarkerData } from "@/types/type";
 
-const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
+const directionsAPI = process.env.EXPO_PUBLIC_GOOGLE_API_KEY;
 
 const Map = () => {
   const {
@@ -55,7 +55,8 @@ const Map = () => {
     region,
     markersCount: markers.length,
     loading,
-    error
+    error,
+    hasDirectionsAPI: !!directionsAPI
   });
 
   // Only show loading if there's an actual loading state, not just missing user location
@@ -110,7 +111,7 @@ const Map = () => {
               title="Destination"
               pinColor="green"
             />
-            {userLatitude && userLongitude && (
+            {userLatitude && userLongitude && directionsAPI && (
               <MapViewDirections
                 origin={{
                   latitude: userLatitude,
@@ -120,9 +121,18 @@ const Map = () => {
                   latitude: destinationLatitude,
                   longitude: destinationLongitude,
                 }}
-                apikey={directionsAPI!}
+                apikey={directionsAPI}
                 strokeColor="#0286FF"
                 strokeWidth={2}
+                onError={(errorMessage) => {
+                  // Only log non-zero-results errors to reduce noise
+                  if (!errorMessage.includes('ZERO_RESULTS')) {
+                    console.log('MapViewDirections Error:', errorMessage);
+                  }
+                }}
+                onReady={(result) => {
+                  console.log('Route found! Distance:', result.distance, 'Duration:', result.duration);
+                }}
               />
             )}
           </>

@@ -24,7 +24,7 @@ const GoogleTextInput = ({
 
   return (
     <View
-      className={`flex flex-row items-center justify-center relative z-50 rounded-xl ${containerStyle}`}
+      className={`flex flex-row items-center justify-center relative rounded-xl ${containerStyle}`}
     >
       <GooglePlacesAutocomplete
         placeholder="Search"
@@ -59,15 +59,15 @@ const GoogleTextInput = ({
         enablePoweredByContainer={false}
         styles={{
           container: {
-            flex: 0,
+            flex: 1,
+            zIndex: 1,
           },
           textInputContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: textInputBackgroundColor || 'white',
             borderRadius: 20,
-            marginHorizontal: 20,
-            paddingHorizontal: 10,
+            paddingHorizontal: 15,
             shadowColor: '#d4d4d4',
             shadowOffset: {
               width: 0,
@@ -89,7 +89,6 @@ const GoogleTextInput = ({
           listView: {
             backgroundColor: textInputBackgroundColor || 'white',
             borderRadius: 10,
-            marginHorizontal: 20,
             marginTop: 5,
             shadowColor: '#d4d4d4',
             shadowOffset: {
@@ -99,7 +98,12 @@ const GoogleTextInput = ({
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
             elevation: 5,
-            maxHeight: 200,
+            maxHeight: 150,
+            position: 'absolute',
+            top: 50,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
           },
           row: {
             backgroundColor: 'white',

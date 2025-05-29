@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { useFonts } from "expo-font";

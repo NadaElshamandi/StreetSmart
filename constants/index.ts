@@ -18,6 +18,8 @@ import location from "../assets/icons/Location.png";
 import point from "../assets/icons/Point.png";
 import calendar from "../assets/icons/calendar.png";
 import information from "../assets/icons/information.png";
+import back from "../assets/icons/Back.png";
+import map from "../assets/icons/map.png";
 
 
 
@@ -43,6 +45,8 @@ export const icons = {
     point,
     calendar,
     information,
+    back,
+    map,
 };
 
 export const onboarding = [
