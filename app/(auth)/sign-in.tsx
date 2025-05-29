@@ -85,7 +85,7 @@ const SignIn = () => {
                     />
                     <OAuth />
                     <StyledLink
-                        href="/sign-up"
+                        href="/(auth)/sign-up"
                         className="text-lg text-center text-general-200 mt-10"
                     >
                         Don&apos;t have an account?{" "}

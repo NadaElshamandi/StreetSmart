@@ -20,7 +20,7 @@ const Onboarding = () => {
 
     const handleNext = () => {
         if (isLastSlide) {
-            router.replace("/(root)/tabs/home");
+            router.replace("/(auth)/sign-up");
         } else {
             swipeRef.current?.scrollBy(1);
         }
@@ -30,7 +30,7 @@ const Onboarding = () => {
         <StyledSafeAreaView className="flex h-full items-center justify-between bg-primary-100">
             <StyledTouchableOpacity
                 onPress={() => {
-                    router.replace("/(root)/tabs/home");
+                    router.replace("/(auth)/sign-in");
                 }}
                 className="w-full flex justify-end items-end p-5"  
             >
@@ -60,12 +60,33 @@ const Onboarding = () => {
             </Swiper>    
 
             <StyledView className="w-full px-6 pb-8">
-                <CustomButton
-                    title={isLastSlide ? "Get Started!" : "Next"}
-                    onPress={handleNext}
-                    bgVariant="primary"
-                    textVariant="default"
-                />
+                {isLastSlide ? (
+                    <StyledView className="space-y-4">
+                        <CustomButton
+                            title="Get Started!"
+                            onPress={() => router.replace("/(auth)/sign-up")}
+                            bgVariant="primary"
+                            textVariant="default"
+                        />
+                        <StyledView className="flex-row items-center justify-center mt-4">
+                            <StyledText className="text-general-200 text-lg">
+                                Already have an account?{" "}
+                            </StyledText>
+                            <StyledTouchableOpacity onPress={() => router.replace("/(auth)/sign-in")}>
+                                <StyledText className="text-primary-500 text-lg font-JakartaSemiBold">
+                                    Sign In
+                                </StyledText>
+                            </StyledTouchableOpacity>
+                        </StyledView>
+                    </StyledView>
+                ) : (
+                    <CustomButton
+                        title="Next"
+                        onPress={handleNext}
+                        bgVariant="primary"
+                        textVariant="default"
+                    />
+                )}
             </StyledView>
         </StyledSafeAreaView>
     );

@@ -20,6 +20,7 @@ import calendar from "../assets/icons/calendar.png";
 import information from "../assets/icons/information.png";
 import back from "../assets/icons/Back.png";
 import map from "../assets/icons/map.png";
+import logout from "../assets/icons/logout.png";
 
 
 
@@ -47,6 +48,7 @@ export const icons = {
     information,
     back,
     map,
+    logout
 };
 
 export const onboarding = [

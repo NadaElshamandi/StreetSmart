@@ -21,11 +21,35 @@ import { useLocationStore, useFavoritesStore } from "@/store";
 import { Landmark } from "@/types/type";
 
 const Home = () => {
-  const { user } = useUser();
-  const { signOut } = useAuth();
+  const { user, isLoaded } = useUser();
+  const { signOut, isSignedIn } = useAuth();
 
   const { setUserLocation, setDestinationLocation } = useLocationStore();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavoritesStore();
+
+  // Debug user data with more detailed logging
+  useEffect(() => {
+    console.log("=== HOME SCREEN DEBUG ===");
+    console.log("isLoaded:", isLoaded);
+    console.log("isSignedIn:", isSignedIn);
+    console.log("user exists:", !!user);
+    
+    if (isLoaded && user) {
+      console.log("User data:", {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.fullName,
+        emailAddress: user.primaryEmailAddress?.emailAddress,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      });
+    } else if (isLoaded && !user) {
+      console.log("User is loaded but no user data available");
+    } else {
+      console.log("User data is still loading...");
+    }
+  }, [isLoaded, user, isSignedIn]);
 
   const handleSignOut = async () => {
     try {
@@ -102,6 +126,48 @@ const Home = () => {
     }
   };
 
+  // Get the user's name for welcome message with better debugging
+  const getUserName = () => {
+    console.log("getUserName called - isLoaded:", isLoaded, "user:", !!user);
+    
+    if (!isLoaded) {
+      console.log("User data not loaded yet");
+      return "...";
+    }
+    
+    if (!user) {
+      console.log("No user data available");
+      return "there";
+    }
+    
+    // Try firstName first, then fallback to fullName, then email
+    if (user.firstName) {
+      console.log("Using firstName:", user.firstName);
+      return user.firstName;
+    } else if (user.fullName) {
+      const firstName = user.fullName.split(' ')[0];
+      console.log("Using first part of fullName:", firstName);
+      return firstName;
+    } else if (user.primaryEmailAddress?.emailAddress) {
+      const emailName = user.primaryEmailAddress.emailAddress.split('@')[0];
+      console.log("Using email username:", emailName);
+      return emailName;
+    }
+    
+    console.log("No name found, using fallback");
+    return "there";
+  };
+
+  // Show loading state while user data is loading
+  if (!isLoaded) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F6F8FA', justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#3B82F6" />
+        <Text style={{ marginTop: 16, fontSize: 16, color: '#6B7280' }}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#F6F8FA' }}>
       <FlatList
@@ -151,7 +217,7 @@ const Home = () => {
         )}
         ListHeaderComponent={
           <>
-            {/* Header with Welcome and Sign Out */}
+            {/* Enhanced Header with Welcome and Sign Out */}
             <View style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -159,13 +225,23 @@ const Home = () => {
               marginVertical: 20,
               marginHorizontal: 20,
             }}>
-              <Text style={{
-                fontSize: 24,
-                fontWeight: '800',
-                color: '#111827',
-              }}>
-                Welcome {user?.firstName}👋
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={{
+                  fontSize: 28,
+                  fontWeight: '800',
+                  color: '#111827',
+                  marginBottom: 4,
+                }}>
+                  Welcome {getUserName()}! 👋
+                </Text>
+                <Text style={{
+                  fontSize: 16,
+                  color: '#6B7280',
+                  fontWeight: '500',
+                }}>
+                  Ready to explore amazing places?
+                </Text>
+              </View>
               <TouchableOpacity
                 onPress={handleSignOut}
                 style={{
@@ -189,7 +265,7 @@ const Home = () => {
                   color: '#EF4444',
                   fontWeight: 'bold',
                   fontSize: 16,
-                }}>X</Text>
+                }}>×</Text>
               </TouchableOpacity>
             </View>
 
