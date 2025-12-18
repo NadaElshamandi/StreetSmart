@@ -4,12 +4,12 @@ A React Native Expo tour guide application that helps users discover landmarks, 
 
 ## Features
 
-- 🗺️ **Interactive Maps**: View landmarks on maps with location markers
-- ⭐ **Favorites System**: Save and manage favorite landmarks
-- 🧭 **Directions**: Get directions to any landmark
-- 🔍 **Search**: Search for destinations using Google Places API
-- 📍 **Location Services**: Current location detection and display
-- 🎨 **Modern UI**: Clean, responsive design with Tailwind CSS
+-  **Interactive Maps**: View landmarks on maps with location markers
+-  **Favorites System**: Save and manage favorite landmarks
+-  **Directions**: Get directions to any landmark
+-  **Search**: Search for destinations using Google Places API
+-  **Location Services**: Current location detection and display
+-  **Modern UI**: Clean, responsive design with Tailwind CSS
 
 ## Mock Data
 
